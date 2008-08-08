@@ -1,3 +1,12 @@
-require File.dirname(__FILE__) + '/lib/authentication'
-require File.dirname(__FILE__) + '/lib/authentication/by_password'
-require File.dirname(__FILE__) + '/lib/authentication/by_cookie_token'
+#Implement the ability to order the authentication order
+#YouserAuthentication::authentication_order = [:local_user, :facebook, :openid]
+
+#Load each authenticator
+require 'youser_authentication'
+
+#YouserAuthentication::load_modules
+
+#YouserAuthentication::authenticators = YouserAuthentication::authenticator_order.collect do |auth|
+#  require "youser_authenticator_#{}{auth}"
+#end
+

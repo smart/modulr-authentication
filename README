@@ -1,3 +1,19 @@
+h1. Modular Restful Authentication Generator by Steve Martocci of Sympact Technologies
+
+This fork of the widely-used plugin "restful-authentication" decouples the authenticator from the identity and allows for support of multiple authentication methods.  Think of it like this.
+
+You are your identity and you have several ID cards to prove this identity (drivers licence, school id, etc), each one of these ID cards brings a different level of credibility as well as different levels of access.  The other great feature is the ability to support social login features like Facebook, Google Authentication, or Yahoo IDs, you can also use OpenID and Mobile Phones.  Each authenticator module has a common interface, this allows you to build your own custom authenticators.  
+
+More Soon!
+
+You can visit Steve's blog at www.ragingonrails.com and his company at www.sympact.net
+
+
+restful-authentication readme below
+
+This enables you to allow users to sign up using an email address, but restrict certain features of the site to those who have added a mobile pho 
+
+
 h1. Restful Authentication Generator
 
 This widely-used plugin provides a foundation for securely managing user

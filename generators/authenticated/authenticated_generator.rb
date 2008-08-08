@@ -135,8 +135,8 @@ class AuthenticatedGenerator < Rails::Generator::NamedBase
                             model_controller_class_path,
                             "#{model_controller_file_name}_controller.rb")
 
-      m.template 'authenticated_system.rb',
-                  File.join('lib', 'authenticated_system.rb')
+      m.template 'youser_authentication.rb',
+                  File.join('lib', 'youser_authentication.rb')
 
       m.template 'authenticated_test_helper.rb',
                   File.join('lib', 'authenticated_test_helper.rb')
