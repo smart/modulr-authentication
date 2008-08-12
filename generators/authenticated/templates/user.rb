@@ -1,13 +1,14 @@
 class <%= class_name %> < ActiveRecord::Base
-  security_components :security_policy,
-    :trustification => [:email_verification],
-    :identity       => [:password, :cookie_token, :simple_roles,]
+ # This is not enabled you must add :password to identity to use password authentication
+ # security_components :security_policy,
+ #  :trustification => [],
+ #  :identity       => [:password, :cookie_token, :simple_roles]
 
   # Validation constants are in config/initializers/rest_auth_config.rb
-  validates_presence_of     :login
-  validates_length_of       :login,    :within => 3..40
-  validates_uniqueness_of   :login,    :case_sensitive => false
-  validates_format_of       :login,    :with => RE_LOGIN_OK, :message => MSG_LOGIN_BAD
+  validates_presence_of     :identifier
+  validates_length_of       :identifier,    :within => 3..40
+  validates_uniqueness_of   :identifier,    :case_sensitive => false
+  validates_format_of       :identifier,    :with => RE_LOGIN_OK, :message => MSG_LOGIN_BAD
 
   validates_length_of       :name,     :maximum => 100
   validates_format_of       :name,     :with => RE_NAME_OK,  :message => MSG_NAME_BAD, :allow_nil => true
@@ -19,6 +20,6 @@ class <%= class_name %> < ActiveRecord::Base
 
   # prevents a visitor from submitting a crafted form that bypasses activation
   # anything else you want your visitor to change should be added here.
-  attr_accessible :login, :email, :name
+  attr_accessible :identifier, :email, :name
 
 end

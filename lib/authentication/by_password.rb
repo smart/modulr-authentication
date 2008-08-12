@@ -12,6 +12,12 @@ protected
     user = User.authenticate_by_password login, password
     become_logged_in_as! user
   end
+  
+  #Log in using params
+  #this was created to abstract the login_by_password! call because not all logins are password based
+  def login_from_params
+    login_by_password!(params[:login], params[:password]) if params[:login] && params[:password]
+  end
 
   #
   # Called from #current_user, attempts to login by basic authentication.
@@ -22,8 +28,9 @@ protected
     end
   end
   # hooks into login chain at lower priority
-  def try_login_chain_with_basic_auth
-    try_login_chain_without_basic_auth || login_from_basic_auth
+  def try_login_chain_with_password
+    p "hi there again"
+    try_login_chain_without_password || login_from_params || login_from_basic_auth
   end
 
   #
@@ -32,7 +39,7 @@ protected
   def self.included recipient
     # Filters :password and :password_confirmation
     recipient.filter_parameter_logging :password if recipient.respond_to? :filter_parameter_logging
-    recipient.alias_method_chain :try_login_chain,  :basic_auth unless recipient.instance_methods.include? 'try_login_chain_without_basic_auth'
+    recipient.alias_method_chain :try_login_chain,  :password unless recipient.instance_methods.include? 'try_login_chain_without_password'
   end
 end
 
@@ -44,17 +51,29 @@ module Identity::Password
     # puts "#{recipient}: including Authentication::ByPassword"
     recipient.extend( ClassMethods )
     recipient.class_eval do
-      attr_accessible :password, :password_confirmation
+      attr_accessible :password, :password_confirmation, :login
       # Virtual attribute for the unencrypted password
-      attr_accessor :password
-      validates_presence_of     :password,                   :if => :password_validation_required?
-      validates_presence_of     :password_confirmation,      :if => :password_validation_required?
-      validates_confirmation_of :password,                   :if => :password_validation_required?
-      validates_length_of       :password, :within => 6..40, :if => :password_validation_required?
+      attr_accessor :password, :password_confirmation
+      before_validation :set_login
+      #validates_presence_of     :login,                      :if => :password_validation_required?
+      #validates_presence_of     :password,                   :if => :password_validation_required?
+      #validates_presence_of     :password_confirmation,      :if => :password_validation_required?
+      #validates_confirmation_of :password,                   :if => :password_validation_required?
+      #validates_length_of       :password, :within => 6..40, :if => :password_validation_required?
       before_save :encrypt_password
     end
   end
-
+  
+  #ensures that the login field is set to what it should be
+  def set_login
+    self.login = login_field
+  end
+  
+  #override this in your model if you want to use something other than identity (i.e email)
+  def login_field
+    identifier
+  end
+  
   # Does this password match the user's?
   def password_valid?(plaintext)
     crypted_password == encrypt(plaintext)

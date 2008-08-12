@@ -15,13 +15,14 @@ class SessionsController < ApplicationController
   def create
     logout_keeping_session!
     begin
-      login_by_password! params[:login], params[:password]
+      #this might be a hack to get an exception thrown but it works for now
+      become_logged_in_as current_user
     rescue Exception => error
       handle_login_error error
     else # success!
       remember_me_flag = (params[:remember_me] == "1")
       handle_remember_cookie! remember_me_flag
-      flash[:notice] = "Welcome, #{current_user.login}"
+      flash[:notice] = "Welcome, #{current_user.identifier}"
       redirect_back_or_default('/')
     end
   end
